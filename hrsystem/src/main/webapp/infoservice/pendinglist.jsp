@@ -990,17 +990,17 @@ function send(){
 </div>
 <a href="../index.jsp">上一頁</a>
 
-<br><br><br>
-<fieldset><input type="text" id="date_d" class="input" size="16" value="" readonly/></fieldset>
+<!-- <br><br><br> -->
+<!-- <fieldset><input type="text" id="date_d" class="input" size="16" value="" readonly/></fieldset> -->
 <!-- <script src="http://code.ciaoca.com/static/js/jquery/jquery-1.7.2.min.js"></script> -->
 <script src="http://code.ciaoca.com/jquery/cxCalendar/demo/js/jquery.cxcalendar.min.js"></script>
 <script>
 function setCalendar(){
-	$('#date_d').cxCalendar({
-		  type: 'datetime',
-		  format: 'YYYY-MM-DD HH:mm',
-		  baseClass: 'cxcalendar_notsecs'
-		});
+// 	$('#date_d').cxCalendar({
+// 		  type: 'datetime',
+// 		  format: 'YYYY-MM-DD HH:mm',
+// 		  baseClass: 'cxcalendar_notsecs'
+// 		});
 	$('#pStartTime').cxCalendar({
 		  type: 'datetime',
 		  format: 'YYYY-MM-DD HH:mm',

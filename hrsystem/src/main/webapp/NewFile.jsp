@@ -6,9 +6,9 @@
 <head>
 <meta charset="utf-8">
 <title>jQuery cxCalendar 日期选择器 &raquo; 选择日期和时间 &raquo; 在线演示 - 前端开发仓库</title>
-<%-- <link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/css/jquery.cxcalendar.css"> --%>
-<link rel="stylesheet" href="http://code.ciaoca.com/static/css/base.css">
-<link rel="stylesheet" href="http://code.ciaoca.com/jquery/cxCalendar/demo/css/layout.css">
+<link rel="stylesheet" href="css/jquery.cxcalendar.css">
+<!-- <link rel="stylesheet" href="http://code.ciaoca.com/static/css/base.css"> -->
+<!-- <link rel="stylesheet" href="http://code.ciaoca.com/jquery/cxCalendar/demo/css/layout.css"> -->
 
 
 <script  src="http://code.jquery.com/jquery-1.12.4.min.js"  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
@@ -36,8 +36,8 @@
 
 
 
-<!-- <script src="http://code.ciaoca.com/static/js/jquery/jquery-1.7.2.min.js"></script> -->
-<script src="http://code.ciaoca.com/jquery/cxCalendar/demo/js/jquery.cxcalendar.min.js"></script>
+<script src="js/jquery.cxcalendar.js"></script>
+<!-- <script src="http://code.ciaoca.com/jquery/cxCalendar/demo/js/jquery.cxcalendar.min.js"></script> -->
 <script>
 
 //选择日期
