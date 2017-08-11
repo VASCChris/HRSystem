@@ -5,18 +5,16 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<!-- 日曆的 -->
-<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/jquery.cxcalendar.css">
-<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/base.css">
-<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/layout.css">
-
 <script  src="http://code.jquery.com/jquery-1.12.4.min.js"  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
-
+<!-- 日曆的 -->
+<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/jquery.cxcalendar.css">
+<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/base.css">
+<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/layout.css">
+<script src="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/js/jquery.cxcalendar.js"></script>
 <style class="cp-pen-styles">
 h1{
   font-size: 30px;
@@ -356,7 +354,42 @@ function stage3(data){
     $('#form').html('');
     $('#form').append(form);
     serviceType();
-    setCalendar();
+//     setCalendar();
+    $('#pStartTime').cxCalendar({
+		  type: 'datetime',
+		  format: 'YYYY-MM-DD HH:mm',
+		  baseClass: 'cxcalendar_notsecs'
+		});
+
+	$('#pEndTime').cxCalendar({
+	  type: 'datetime',
+	  format: 'YYYY-MM-DD HH:mm',
+	  baseClass: 'cxcalendar_notsecs'
+	});
+
+	$('#cEstimated').cxCalendar({
+	  type: 'datetime',
+	  format: 'YYYY-MM-DD HH:mm',
+	  baseClass: 'cxcalendar_notsecs'
+	});
+
+	$('#cActual').cxCalendar({
+	  type: 'datetime',
+	  format: 'YYYY-MM-DD HH:mm',
+	  baseClass: 'cxcalendar_notsecs'
+	});
+
+	$('#iEstimated').cxCalendar({
+	  type: 'datetime',
+	  format: 'YYYY-MM-DD HH:mm',
+	  baseClass: 'cxcalendar_notsecs'
+	});
+
+	$('#iActual').cxCalendar({
+	  type: 'datetime',
+	  format: 'YYYY-MM-DD HH:mm',
+	  baseClass: 'cxcalendar_notsecs'
+	});
     
     
     $('#typeContent').html('');
@@ -810,7 +843,6 @@ function serviceType() {
         async: false,
         cache: false,
         success: function (data) {
-        	console.log("A="+data);
         	for (var i = 0; i < data.length; i++) {
         		serviceTypeAdd(data[i]);
         	}
@@ -820,7 +852,6 @@ function serviceType() {
 //==================================================抓服務列表==================================================
 function serviceTypeAdd(data){
 	var bodyHTML = '<option value="'+ data.no +'">'+ data.name +'</option>';
-	console.log(JSON.stringify(data));
 	$('#infoServiceTypeNo').append(bodyHTML);
 }
 //==================================================資安等級==================================================
@@ -991,52 +1022,7 @@ function send(){
 </div>
 <a href="../index.jsp">上一頁</a>
 
-<br><br><br>
-<fieldset><input type="text" id="date_d" class="input" size="16" value="" readonly/></fieldset>
-<script src="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/js/jquery.cxcalendar.js"></script>
-<script>
-function setCalendar(){
-	$('#date_d').cxCalendar({
-		  type: 'datetime',
-		  format: 'YYYY-MM-DD HH:mm',
-		  baseClass: 'cxcalendar_notsecs'
-		});
-	$('#pStartTime').cxCalendar({
-		  type: 'datetime',
-		  format: 'YYYY-MM-DD HH:mm',
-		  baseClass: 'cxcalendar_notsecs'
-		});
 
-	$('#pEndTime').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
 
-	$('#cEstimated').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-
-	$('#cActual').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-
-	$('#iEstimated').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-
-	$('#iActual').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-}
-</script>
 </body>
 </html>
