@@ -7,8 +7,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <!-- 日曆的 -->
-<link rel="stylesheet" href="http://code.ciaoca.com/static/css/base.css">
-<link rel="stylesheet" href="http://code.ciaoca.com/jquery/cxCalendar/demo/css/layout.css"> 
+<link rel="stylesheet" href="resource/css/jquery.cxcalendar.css">
+<link rel="stylesheet" href="resource/css/base.css">
+<link rel="stylesheet" href="resource/css/layout.css">
 
 <script  src="http://code.jquery.com/jquery-1.12.4.min.js"  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
@@ -990,17 +991,16 @@ function send(){
 </div>
 <a href="../index.jsp">上一頁</a>
 
-<!-- <br><br><br> -->
-<!-- <fieldset><input type="text" id="date_d" class="input" size="16" value="" readonly/></fieldset> -->
-<!-- <script src="http://code.ciaoca.com/static/js/jquery/jquery-1.7.2.min.js"></script> -->
-<script src="http://code.ciaoca.com/jquery/cxCalendar/demo/js/jquery.cxcalendar.min.js"></script>
+<br><br><br>
+<fieldset><input type="text" id="date_d" class="input" size="16" value="" readonly/></fieldset>
+<script src="resource/js/jquery.cxcalendar.js"></script>
 <script>
 function setCalendar(){
-// 	$('#date_d').cxCalendar({
-// 		  type: 'datetime',
-// 		  format: 'YYYY-MM-DD HH:mm',
-// 		  baseClass: 'cxcalendar_notsecs'
-// 		});
+	$('#date_d').cxCalendar({
+		  type: 'datetime',
+		  format: 'YYYY-MM-DD HH:mm',
+		  baseClass: 'cxcalendar_notsecs'
+		});
 	$('#pStartTime').cxCalendar({
 		  type: 'datetime',
 		  format: 'YYYY-MM-DD HH:mm',

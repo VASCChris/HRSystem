@@ -7,6 +7,8 @@
 <meta charset="utf-8">
 <title>jQuery cxCalendar 日期选择器 &raquo; 选择日期和时间 &raquo; 在线演示 - 前端开发仓库</title>
 <link rel="stylesheet" href="resource/css/jquery.cxcalendar.css">
+<link rel="stylesheet" href="resource/css/base.css">
+<link rel="stylesheet" href="resource/css/layout.css">
 <!-- <link rel="stylesheet" href="http://code.ciaoca.com/static/css/base.css"> -->
 <!-- <link rel="stylesheet" href="http://code.ciaoca.com/jquery/cxCalendar/demo/css/layout.css"> -->
 
