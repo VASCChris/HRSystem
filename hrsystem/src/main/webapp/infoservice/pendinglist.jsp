@@ -15,6 +15,8 @@
 <link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/base.css">
 <link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/layout.css">
 <script src="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/js/jquery.cxcalendar.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/js/WdatePicker.js"></script>
 <style class="cp-pen-styles">
 h1{
   font-size: 30px;
@@ -346,50 +348,17 @@ function stage3(data){
     
 
     //塞入表單
+    var x = "'";
+    var attribute ='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm"})'; //有 ' and " 符號問題,所以拆開來寫
     var form = '<div>服務類別:<select id="infoServiceTypeNo"><option value="0">選擇服務類別</option></select></div><br>';
     form += '服務類別備註:<input id="eventRemark" type="text" value="" /><br><br>';
     form += '事件類別:<select id="event" onchange="infoSecurity()"><option value="0">選擇事件類別</option><option value="建議事項">建議事項</option><option value="非資安事件">非資安事件</option><option value="資安事件">資安事件</option></select><br><br>';
     form += '<form id="security" onclick="setSecurityLv()"></form><br><br>';
-    form += '<div><span>處理方式:&nbsp;&nbsp;</span><textarea id="processWay"></textarea></div><br><div><span>執行開始時間:&nbsp;&nbsp;</span><fieldset><input type="text" id="pStartTime" class="input" size="16" value="" readonly/></fieldset></div><br><div><span>執行完成時間:&nbsp;&nbsp;</span><fieldset><input type="text" id="pEndTime" class="input" size="16" value="" readonly/></fieldset></div><br><div><span>矯正措施:&nbsp;&nbsp;</span><textarea id="correction"></textarea></div><br><div><span>預定完成時間:&nbsp;&nbsp;</span><fieldset><input type="text" id="cEstimated" class="input" size="16" value="" readonly/></fieldset></div><br><div><span>實際完成時間:&nbsp;&nbsp;</span><fieldset><input type="text" id="cActual" class="input" size="16" value="" readonly/></fieldset></div><br><div><span>改善措施:&nbsp;&nbsp;</span><textarea id="improvement"></textarea></div><br><div><span>預定完成時間:&nbsp;&nbsp;</span><fieldset><input type="text" id="iEstimated" class="input" size="16" value="" readonly/></fieldset></div><br><div><span>實際完成時間:&nbsp;&nbsp;</span><fieldset><input type="text" id="iActual" class="input" size="16" value="" readonly/></fieldset></div><br><div><span>驗證人員:&nbsp;&nbsp;</span><select id="verificationId"><option value="0">請選擇驗證人員</option></select></div><br><div id="remark"></div><br>';
+    form += '<div><span>處理方式:&nbsp;&nbsp;</span><textarea id="processWay"></textarea></div><br><div><span>執行開始時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="pStartTime" onclick='+ x + attribute + x +' onchange="endTime()" value=""/></div><br><div id="endTime"><span>執行完成時間:&nbsp;&nbsp;</span></div><br><div><span>矯正措施:&nbsp;&nbsp;</span><textarea id="correction"></textarea></div><br><div><span>預定完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="cEstimated" onclick='+ x + attribute + x +' onchange="cTime()" value=""/></div><br><div id="cTime"><span>實際完成時間:&nbsp;&nbsp;</span></div><br><div><span>改善措施:&nbsp;&nbsp;</span><textarea id="improvement"></textarea></div><br><div><span>預定完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="iEstimated" onclick='+ x + attribute + x +' onchange="iTime()" value=""/></div><br><div id="iTime"><span>實際完成時間:&nbsp;&nbsp;</span></div><br><div><span>驗證人員:&nbsp;&nbsp;</span><select id="verificationId"><option value="0">請選擇驗證人員</option></select></div><br><div id="remark"></div><br>';
     $('#form').html('');
     $('#form').append(form);
     serviceType();
-//     setCalendar();
-    $('#pStartTime').cxCalendar({
-		  type: 'datetime',
-		  format: 'YYYY-MM-DD HH:mm',
-		  baseClass: 'cxcalendar_notsecs'
-		});
 
-	$('#pEndTime').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-
-	$('#cEstimated').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-
-	$('#cActual').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-
-	$('#iEstimated').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
-
-	$('#iActual').cxCalendar({
-	  type: 'datetime',
-	  format: 'YYYY-MM-DD HH:mm',
-	  baseClass: 'cxcalendar_notsecs'
-	});
     
     
     $('#typeContent').html('');
@@ -637,8 +606,18 @@ function stage4_5(data){
     $('#returnReasonContent').html('');
     $('#remarkContent').html('');
     
+    var x = "'";
+    var attribute ='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm"})'; //有 ' and " 符號問題,所以拆開來寫
+    var pEndAttribute ='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+pStartTime+'"})';
+    var cActAttribute ='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+cEstimated+'"})';
+    var iActAttribute ='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+iEstimated+'"})';
+    var pStart = '執行開始時間: <input type="text" class="Wdate" id="pStartTime" onclick='+ x + attribute + x +' onchange="pEnd()" value="'+pStartTime+'"/>';
+    var cEst = '預定完成時間: <input type="text" class="Wdate" id="cEstimated" onclick='+ x + attribute + x +' onchange="cAct()" value="'+cEstimated+'"/>';
+    var iEst = '預定完成時間: <input type="text" class="Wdate" id="iEstimated" onclick='+ x + attribute + x +' onchange="iAct()" value="'+iEstimated+'"/>';
+    var pEnd = '執行完成時間: <input type="text" class="Wdate" id="pEndTime" onclick='+ x + pEndAttribute + x +' value="'+pEndTime+'"/>';
+    var cAct = '實際完成時間: <input type="text" class="Wdate" id="cActual" onclick='+ x + cActAttribute + x +' value="'+cActual+'"/>';
+    var iAct = '實際完成時間: <input type="text" class="Wdate" id="iActual" onclick='+ x + iActAttribute + x +' value="'+iActual+'"/>';
     
-
     $('#typeContent').append("類別:&nbsp;&nbsp;"+type+"&nbsp;&nbsp;&nbsp;");
     $('#applicationTime').append("申請時間:&nbsp;&nbsp;"+applicationTime+"&nbsp;&nbsp;&nbsp;");
     $('#applicant').append("申請人:&nbsp;&nbsp;"+applicant+"&nbsp;&nbsp;&nbsp;");
@@ -653,14 +632,14 @@ function stage4_5(data){
     $('#eventRemarkContent').append("事件類別備註:&nbsp;&nbsp;"+eventRemark+"&nbsp;&nbsp;&nbsp;"); 
     $('#infoSecurityLv').append("資安等級:&nbsp;&nbsp;"+infoSecurityLv+"&nbsp;&nbsp;&nbsp;");
     $('#pWay').append('處理方式: <input type="text" id="processWay" value="'+processWay+'" />');
-    $('#pStart').append('執行開始時間: <input type="text" id="pStartTime" value="'+pStartTime+'" />');
-    $('#pEnd').append('執行完成時間: <input type="text" id="pEndTime" value="'+pEndTime+'" />');
+    $('#pStart').append(pStart);
+    $('#pEnd').append(pEnd);
     $('#cWay').append('矯正措施: <input type="text" id="correction" value="'+correction+'" />');
-    $('#cEst').append('預定完成時間: <input type="text" id="cEstimated" value="'+cEstimated+'" />');
-    $('#cAct').append('實際完成時間: <input type="text" id="cActual" value="'+cActual+'" />');
+    $('#cEst').append(cEst);
+    $('#cAct').append(cAct);
     $('#iWay').append('改善措施: <input type="text" id="improvement" value="'+improvement+'" />');
-    $('#iEst').append('預定完成時間: <input type="text" id="iEstimated" value="'+iEstimated+'" />');
-    $('#iAct').append('實際完成時間: <input type="text" id="iActual" value="'+iActual+'" />');
+    $('#iEst').append(iEst);
+    $('#iAct').append(iAct);
     $('#ver').append("驗證人員:&nbsp;&nbsp;"+verification+"&nbsp;&nbsp;&nbsp;");
     $('#returnReasonContent').append("退件原因:&nbsp;&nbsp;"+returnReason+"&nbsp;&nbsp;&nbsp;");
     //<input type="text" id="" value="'+ +'" />
@@ -798,6 +777,49 @@ function stage5(data){
     bodyHTML += '<input type="hidden" id="verificationId" value="'+data.verificationId+'" />';
     bodyHTML += '<input type="hidden" id="stage" value="6.0" />';
     $('#formDetail').append(bodyHTML);
+}
+//==================================================stage 3 & 4.5 日期相關==================================================
+function endTime(){
+	var x = "'";
+	var y = 'WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+$('#pStartTime').val()+'"})';
+	var bodyHTML = '<span>執行完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="pEndTime" onclick='+x+y+x+' value=""/>';
+	$('#endTime').html('');
+	$('#endTime').append(bodyHTML);
+}
+function cTime(){
+	var x = "'";
+	var y = 'WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+$('#cEstimated').val()+'"})';
+	var bodyHTML = '<span>實際完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="cActual" onclick='+x+y+x+' value=""/>';
+	$('#cTime').html('');
+	$('#cTime').append(bodyHTML);
+}
+function iTime(){
+	var x = "'";
+	var y = 'WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+$('#iEstimated').val()+'"})';
+	var bodyHTML = '<span>實際完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="iActual" onclick='+x+y+x+' value=""/>';
+	$('#iTime').html('');
+	$('#iTime').append(bodyHTML);
+}
+function pEnd(){
+	var x = "'";
+	var y = 'WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+$('#pStartTime').val()+'"})';
+	var bodyHTML = '<span>執行完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="pEndTime" onclick='+x+y+x+' value=""/>';
+	$('#pEnd').html('');
+	$('#pEnd').append(bodyHTML);
+}
+function cAct(){
+	var x = "'";
+	var y = 'WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+$('#cEstimated').val()+'"})';
+	var bodyHTML = '<span>實際完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="cActual" onclick='+x+y+x+' value=""/>';
+	$('#cAct').html('');
+	$('#cAct').append(bodyHTML);
+}
+function iAct(){
+	var x = "'";
+	var y = 'WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm",minDate:"'+$('#iEstimated').val()+'"})';
+	var bodyHTML = '<span>實際完成時間:&nbsp;&nbsp;</span><input type="text" class="Wdate" id="iActual" onclick='+x+y+x+' value=""/>';
+	$('#iAct').html('');
+	$('#iAct').append(bodyHTML);
 }
 //==================================================日期轉換==================================================
 function dateFormat(timestamp) {
