@@ -21,7 +21,7 @@ function pEnd(){
 <body>
 <!-- <input type="text" class="Wdate" id="d412" onclick='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm"})' value=""/> -->
 
-<input type="text" class="Wdate" id="pStartTime" onclick='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm"})' onchange="pEnd()" value=""/>
+<input type="text" class="Wdate" id="pStartTime" onclick='WdatePicker({skin:"whyGreen",dateFmt:"yyyy-MM-dd HH:mm"}),pEnd()' value=""/>
 <div id="pEnd"></div>
 </body>
 </html>

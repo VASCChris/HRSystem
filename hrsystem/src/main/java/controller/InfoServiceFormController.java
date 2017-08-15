@@ -16,13 +16,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import hr.model.DepInfoBean;
+import hr.model.DepInfoDAO;
 import hr.model.DepInfoService;
 import hr.model.EmpInfoBean;
+import hr.model.EmpInfoDAO;
 import hr.model.EmpInfoService;
 import hr.model.InfoSecurityLvBean;
 import hr.model.InfoServiceFormBean;
 import hr.model.InfoServiceFormService;
 import hr.model.InfoServiceTypeBean;
+import mail.MailService;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
@@ -35,19 +38,17 @@ public class InfoServiceFormController implements Serializable{
     private InfoServiceFormService infoServiceFormService;
 	@Autowired
     private EmpInfoService empInfoService;
-	
+	@Autowired
+    private MailService mailService;
+	@Autowired
+	private EmpInfoDAO empInfoDAOHibernate;
+	@Autowired
+	private DepInfoDAO depInfoDAOHibernate;
 	
 	@RequestMapping(value = "/get/applicantdep", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String getApplicantDep(HttpServletRequest request) throws Exception {
 		HttpSession session = request.getSession();
-
-		//暫時設成2
-//		EmpInfoBean empInfo = new EmpInfoBean();
-//		DepInfoBean depInfo = new DepInfoBean();
-//		depInfo.setNo(2);
-//		empInfo.setDepInfoBean(depInfo);
-//		session.setAttribute("loginToken", empInfo);
 		
 		
 		EmpInfoBean emp = (EmpInfoBean)session.getAttribute("loginToken");
@@ -80,49 +81,12 @@ public class InfoServiceFormController implements Serializable{
     @ResponseBody
     public String findByReceiver(HttpServletRequest request) throws Exception {
 		HttpSession session = request.getSession();
-		//暫時設成14
-//	    EmpInfoBean empInfo = new EmpInfoBean();
-//		empInfo.setId(14);
-//		session.setAttribute("loginToken", empInfo);
 		
 		EmpInfoBean emp = (EmpInfoBean)session.getAttribute("loginToken");
 		int empId = emp.getId();
 		return infoServiceFormService.iSFListByReceiver(empId).toString();
 	}
 	
-//	@RequestMapping(value = "/list/stage/one", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-//    @ResponseBody
-//    public String findByApplicantSupervisor() throws Exception {
-//        //暫時塞14
-//		return infoServiceFormService.iSFListByApplicantSupervisor(14).toString();
-//	}
-//	
-//	@RequestMapping(value = "/list/stage/two", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-//    @ResponseBody
-//    public String findByContractor() throws Exception {
-////		int contractor = 0;
-////		try {
-////			contractor = Integer.parseInt(num);
-////		} catch (Exception e) {
-////			e.printStackTrace();
-////		}
-//        //暫時塞14
-//		return infoServiceFormService.iSFListByContractor(14).toString();
-//	}
-//	
-//	@RequestMapping(value = "/list/stage/three", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-//    @ResponseBody
-//    public String findByVerification() throws Exception {
-//        //暫時塞14
-//		return infoServiceFormService.iSFListByVerification(14).toString();
-//	}
-//	
-//	@RequestMapping(value = "/list/stage/four", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-//    @ResponseBody
-//    public String findByStage4() throws Exception {
-//        //暫時塞14
-//		return infoServiceFormService.iSFListByStage4(14).toString();
-//	}
 	
 	@RequestMapping(value = "/list/stage/six", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
@@ -187,6 +151,23 @@ public class InfoServiceFormController implements Serializable{
 		
 		
 		infoServiceFormService.insert(bean);
+		String mailTo = empInfoDAOHibernate.select(receiverBean.getId()).getAccount();
+		String receiveName = empInfoDAOHibernate.select(receiverBean.getId()).getName();
+		String applicantName = empInfoDAOHibernate.select(applicantId).getName();
+		int applicantExt = empInfoDAOHibernate.select(applicantId).getExt();
+		String depName = depInfoDAOHibernate.select(applicantDepNo).getName();
+		String content = receiveName+" 您好!\r\n" + 
+				"有一張"+ applicantName +"申請的資訊服務申請單等待您的簽核，請盡快處理喔！\r\n" + 
+				"類別 : "+type+"\r\n" + 
+				"階段 : 1\r\n" + 
+				"申請時間 : "+date+"\r\n" + 
+				"申請部門 : "+depName+"\r\n" + 
+				"申請人 : "+applicantName+"\r\n" + 
+				"分機 : "+applicantExt+"\r\n" + 
+				"需求 : "+demand+"\r\n \r\n \r\n" + 
+				"http://localhost:8080/hrsystem/index.jsp";
+		System.out.println(mailTo);
+		mailService.sendMail("chris.chiu@vascreative.com", "chris.chiu@vascreative.com", "資訊服務申請單簽核通知", content);
 		
 		return infoServiceFormService.iSFList().toString();
 	}
@@ -435,6 +416,34 @@ public class InfoServiceFormController implements Serializable{
 		}
 		
 		infoServiceFormService.update(bean);
+		
+		String mailTo = null;
+		String receiveName = null;
+		try {
+			mailTo = empInfoDAOHibernate.select(receiverBean.getId()).getAccount();
+			receiveName = empInfoDAOHibernate.select(receiverBean.getId()).getName();
+		} catch (NullPointerException e) {
+			mailTo = null;
+			receiveName = null;
+		}
+		
+		String applicantName = empInfoDAOHibernate.select(applicantIdNo).getName();
+		int applicantExt = empInfoDAOHibernate.select(applicantIdNo).getExt();
+		String depName = depInfoDAOHibernate.select(applicantDepNum).getName();
+		String content = receiveName+" 您好!\r\n" + 
+				"有一張"+applicantName+"申請的資訊服務申請單等待您的簽核，請盡快處理喔！\r\n" + 
+				"類別 : "+type+"\r\n" + 
+				"表單流水號 : "+id+"\r\n" + 
+				"階段 : "+stageNo+"\r\n" + 
+				"申請時間 : "+applicationTime+"\r\n" + 
+				"申請部門 : "+depName+"\r\n" + 
+				"申請人 : "+applicantName+"\r\n" + 
+				"分機 : "+applicantExt+"\r\n" + 
+				"需求 : "+demandContent+"\r\n \r\n \r\n" + 
+				"http://localhost:8080/hrsystem/index.jsp";
+		if(receiverBean!=null) {                                     //正式時改mailTo 
+			mailService.sendMail("chris.chiu@vascreative.com", "chris.chiu@vascreative.com", "資訊服務申請單簽核通知", content);
+		}
 		
 		return infoServiceFormService.iSFList().toString();
 	}
