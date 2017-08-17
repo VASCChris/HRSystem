@@ -166,8 +166,7 @@ public class InfoServiceFormController implements Serializable{
 				"分機 : "+applicantExt+"\r\n" + 
 				"需求 : "+demand+"\r\n \r\n \r\n" + 
 				"http://localhost:8080/hrsystem/index.jsp";
-		System.out.println(mailTo);
-		mailService.sendMail("chris.chiu@vascreative.com", "chris.chiu@vascreative.com", "資訊服務申請單簽核通知", content);
+		mailService.sendMail("chris.chiu@vascreative.com", mailTo, "資訊服務申請單簽核通知", content);
 		
 		return infoServiceFormService.iSFList().toString();
 	}
@@ -186,6 +185,7 @@ public class InfoServiceFormController implements Serializable{
 		InfoSecurityLvBean infoSecurityLvBean = new InfoSecurityLvBean();
 		EmpInfoBean verificationBean = new EmpInfoBean();
 		EmpInfoBean receiverBean = new EmpInfoBean();
+		EmpInfoBean superAdmin = empInfoDAOHibernate.selectByCharactor("superadmin");
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
 		//資料轉換
@@ -251,7 +251,7 @@ public class InfoServiceFormController implements Serializable{
 		try {
 			pStart = sdf.parse(pStartTime);
 		} catch (NullPointerException e1) {
-			if(stageNo==2 || stageNo==3 || stageNo==99) {
+			if(stageNo==2.0 || stageNo==3.0 || stageNo==99.0) {
 				pStart = null;
 			}else {
 				e1.printStackTrace();
@@ -261,7 +261,7 @@ public class InfoServiceFormController implements Serializable{
 		try {
 			pEnd = sdf.parse(pEndTime);
 		} catch (NullPointerException e1) {
-			if(stageNo==2 || stageNo==3 || stageNo==99) {
+			if(stageNo==2.0 || stageNo==3.0|| stageNo==99.0) {
 				pEnd = null;
 			}else {
 				e1.printStackTrace();
@@ -278,7 +278,7 @@ public class InfoServiceFormController implements Serializable{
 		try {
 			cEstComplete = sdf.parse(cEstimated);
 		} catch (NullPointerException e1) {
-			if(stageNo==2 || stageNo==3 || stageNo==99) {
+			if(stageNo==2.0 || stageNo==3.0 || stageNo==99.0) {
 				cEstComplete = null;
 			}else {
 				e1.printStackTrace();
@@ -288,7 +288,7 @@ public class InfoServiceFormController implements Serializable{
 		try {
 			cActComplete = sdf.parse(cActual);
 		} catch (NullPointerException e1) {
-			if(stageNo==2 || stageNo==3 || stageNo==99) {
+			if(stageNo==2.0 || stageNo==3.0 || stageNo==99.0) {
 				cActComplete = null;
 			}else {
 				e1.printStackTrace();
@@ -305,7 +305,7 @@ public class InfoServiceFormController implements Serializable{
 		try {
 			iEstComplete = sdf.parse(iEstimated);
 		} catch (NullPointerException e1) {
-			if(stageNo==2 || stageNo==3 || stageNo==99) {
+			if(stageNo==2.0 || stageNo==3.0 || stageNo==99.0) {
 				iEstComplete = null;
 			}else {
 				e1.printStackTrace();
@@ -315,7 +315,7 @@ public class InfoServiceFormController implements Serializable{
 		try {
 			iActComplete = sdf.parse(iActual);
 		} catch (NullPointerException e1) {
-			if(stageNo==2 || stageNo==3 || stageNo==99) {
+			if(stageNo==2.0 || stageNo==3.0 || stageNo==99.0) {
 				iActComplete = null;
 			}else {
 				e1.printStackTrace();
@@ -371,7 +371,7 @@ public class InfoServiceFormController implements Serializable{
 			receiverBean.setId(contractorIdNo);
 		}else if(stageNo==5.0) {
 			//資訊服務申請單管理人員,目前是Dori(12)
-			receiverBean.setId(12);
+			receiverBean.setId(superAdmin.getId());
 		}else {
 			//跑完全部流程後,不會有接收人
 			receiverBean = null;
@@ -417,20 +417,53 @@ public class InfoServiceFormController implements Serializable{
 		
 		infoServiceFormService.update(bean);
 		
-		String mailTo = null;
-		String receiveName = null;
+		String mailTo = null; //主要收件人
 		try {
 			mailTo = empInfoDAOHibernate.select(receiverBean.getId()).getAccount();
-			receiveName = empInfoDAOHibernate.select(receiverBean.getId()).getName();
 		} catch (NullPointerException e) {
 			mailTo = null;
+		}
+		String applicantMail = null; 
+		try {
+			applicantMail = empInfoDAOHibernate.select(applicantIdNo).getAccount();
+		} catch (NullPointerException e1) {
+			applicantMail = null;
+		}
+		String applicantSupervisorMail = null;
+		try {
+			applicantSupervisorMail = empInfoDAOHibernate.select(empInfoService.getSupervisorId(applicantDepNum)).getAccount();
+		
+		} catch (Exception e1) {
+			applicantSupervisorMail = null;
+		}
+		String contractorMail = null;
+		try {
+			contractorMail = empInfoDAOHibernate.select(contractorIdNo).getAccount();
+		} catch (NullPointerException e1) {
+			contractorMail = null;
+		}
+		String contractorSupervisorMail = null;
+		try {
+			contractorSupervisorMail = empInfoDAOHibernate.select(empInfoService.getSupervisorId(contractorDepNum)).getAccount();
+		} catch (Exception e1) {
+			contractorSupervisorMail = null;
+		}
+		String receiveName = null;
+		try {
+			receiveName = empInfoDAOHibernate.select(receiverBean.getId()).getName();
+		} catch (NullPointerException e) {
 			receiveName = null;
 		}
-		
+		String contractorName=null;
+		try {
+			contractorName = empInfoDAOHibernate.select(contractorIdNo).getName();
+		} catch (NullPointerException e) {
+			contractorName=null;
+		}
 		String applicantName = empInfoDAOHibernate.select(applicantIdNo).getName();
 		int applicantExt = empInfoDAOHibernate.select(applicantIdNo).getExt();
 		String depName = depInfoDAOHibernate.select(applicantDepNum).getName();
-		String content = receiveName+" 您好!\r\n" + 
+		String content1 = receiveName+" 您好!\r\n" + 
 				"有一張"+applicantName+"申請的資訊服務申請單等待您的簽核，請盡快處理喔！\r\n" + 
 				"類別 : "+type+"\r\n" + 
 				"表單流水號 : "+id+"\r\n" + 
@@ -441,8 +474,28 @@ public class InfoServiceFormController implements Serializable{
 				"分機 : "+applicantExt+"\r\n" + 
 				"需求 : "+demandContent+"\r\n \r\n \r\n" + 
 				"http://localhost:8080/hrsystem/index.jsp";
+		
+		String content2 = "您好!\r\n" + 
+				"有一張"+applicantName+"申請的資訊服務申請單進行到第"+stageNo+"階段！\r\n" + 
+				"類別 : "+type+"\r\n" + 
+				"表單流水號 : "+id+"\r\n" + 
+				"申請時間 : "+applicationTime+"\r\n" + 
+				"申請部門 : "+depName+"\r\n" + 
+				"申請人 : "+applicantName+"\r\n" + 
+				"分機 : "+applicantExt+"\r\n" + 
+				"承辦人 : "+contractorName+"\r\n" + 
+				"需求 : "+demandContent+"\r\n \r\n \r\n";
+		
 		if(receiverBean!=null) {                                     //正式時改mailTo 
-			mailService.sendMail("chris.chiu@vascreative.com", "chris.chiu@vascreative.com", "資訊服務申請單簽核通知", content);
+			mailService.sendMail("chris.chiu@vascreative.com", mailTo, "資訊服務申請單簽核通知", content1);
+		}
+		if(stageNo==3.0) {                                    //資訊服務申請單管理人員,目前是Dori(12)
+			mailService.sendMail("chris.chiu@vascreative.com", superAdmin.getAccount(), "資訊服務申請單簽核通知", content2);
+		}else if(stageNo==5.0) {
+			mailService.sendMail("chris.chiu@vascreative.com", applicantMail, "資訊服務申請單進度通知", content2);
+			mailService.sendMail("chris.chiu@vascreative.com", applicantSupervisorMail, "資訊服務申請單進度通知", content2);
+			mailService.sendMail("chris.chiu@vascreative.com", contractorMail, "資訊服務申請單進度通知", content2);
+			mailService.sendMail("chris.chiu@vascreative.com", contractorSupervisorMail, "資訊服務申請單進度通知", content2);
 		}
 		
 		return infoServiceFormService.iSFList().toString();

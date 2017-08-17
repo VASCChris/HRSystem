@@ -34,6 +34,12 @@ public class EmpInfoDAOHibernate implements EmpInfoDAO {
 		return (EmpInfoBean) this.getSession().get(EmpInfoBean.class, id);
 	}
 	
+	public EmpInfoBean selectByCharactor(String charactor) {
+		Query query = this.getSession().createQuery("from EmpInfoBean where character=?");
+		query.setParameter(0, charactor);
+		return (EmpInfoBean) query.uniqueResult();
+	}
+	
 	public EmpInfoBean selectByName(String name) {
 		Query query = this.getSession().createQuery("from EmpInfoBean where name=?");
 		query.setParameter(0, name);
@@ -119,7 +125,7 @@ public class EmpInfoDAOHibernate implements EmpInfoDAO {
 		bean.setDepInfoBean(depInfoBean);
 		bean.setJobInfoBean(jobInfoBean);
 		bean.setCharacter("xxx");
-		EmpInfoBean xxx = dao.selectByAccountAndPwd("Chris.Chiu@vascreative.com", "xxx2");
+		EmpInfoBean xxx = dao.selectByCharactor("superadmin");
 		System.out.println(xxx);
 		
 		sessionFactory.getCurrentSession().getTransaction().commit();

@@ -144,6 +144,7 @@
         <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
     <select name="character" class="form-control selectpicker" >
          <option value="0">選擇職務</option>
+         <option value="superadmin">superadmin</option>
          <option value="admin">admin</option>
          <option value="common">common</option>
     </select>

@@ -44,7 +44,7 @@ public class EmpInfoService implements Serializable{
 		return result;
 	}
 	
-	public Integer getSupervisorId(int depNo) {
+	public Integer getSupervisorId(int depNo) { //透過部門編號來查詢主管ID
 		String supervisor = depInfoDAOHibernate.select(depNo).getSupervisor();
 		int id = empInfoDAOHibernate.selectByName(supervisor).getId();
 		return id;

@@ -6,6 +6,8 @@ public interface EmpInfoDAO {
 
 	EmpInfoBean select(int id);
 	
+	EmpInfoBean selectByCharactor(String charactor);
+	
 	EmpInfoBean selectByName(String name);
 	
 	EmpInfoBean selectByAccountAndPwd(String account ,String password);

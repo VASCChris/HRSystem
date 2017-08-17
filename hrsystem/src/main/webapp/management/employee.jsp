@@ -158,6 +158,7 @@ tbody:hover tr:hover td {
                 </select></td>
 				<td><select name="character">
         			 <option value="${empList.character}">${empList.character}</option>
+       				 <option value="superadmin">superadmin</option>
        				 <option value="admin">admin</option>
         			 <option value="common">common</option>
                 </select></td>
