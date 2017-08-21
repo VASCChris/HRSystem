@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import hr.model.DepInfoBean;
 import hr.model.DepInfoDAO;
-import hr.model.DepInfoService;
 import hr.model.EmpInfoBean;
 import hr.model.EmpInfoDAO;
 import hr.model.EmpInfoService;
@@ -26,7 +25,7 @@ import hr.model.InfoServiceFormBean;
 import hr.model.InfoServiceFormService;
 import hr.model.InfoServiceTypeBean;
 import mail.MailService;
-import net.sf.json.JSON;
+import mail.MailThread;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -44,6 +43,7 @@ public class InfoServiceFormController implements Serializable{
 	private EmpInfoDAO empInfoDAOHibernate;
 	@Autowired
 	private DepInfoDAO depInfoDAOHibernate;
+	
 	
 	@RequestMapping(value = "/get/applicantdep", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
@@ -156,6 +156,7 @@ public class InfoServiceFormController implements Serializable{
 		String applicantName = empInfoDAOHibernate.select(applicantId).getName();
 		int applicantExt = empInfoDAOHibernate.select(applicantId).getExt();
 		String depName = depInfoDAOHibernate.select(applicantDepNo).getName();
+		String mailTitle = "資訊服務申請單簽核通知";
 		String content = receiveName+" 您好!\r\n" + 
 				"有一張"+ applicantName +"申請的資訊服務申請單等待您的簽核，請盡快處理喔！\r\n" + 
 				"類別 : "+type+"\r\n" + 
@@ -166,7 +167,8 @@ public class InfoServiceFormController implements Serializable{
 				"分機 : "+applicantExt+"\r\n" + 
 				"需求 : "+demand+"\r\n \r\n \r\n" + 
 				"http://localhost:8080/hrsystem/index.jsp";
-		mailService.sendMail("chris.chiu@vascreative.com", mailTo, "資訊服務申請單簽核通知", content);
+		Thread thread = new MailThread(mailTo, content, mailTitle, mailService);
+		thread.start();
 		
 		return infoServiceFormService.iSFList().toString();
 	}
@@ -486,16 +488,25 @@ public class InfoServiceFormController implements Serializable{
 				"承辦人 : "+contractorName+"\r\n" + 
 				"需求 : "+demandContent+"\r\n \r\n \r\n";
 		
-		if(receiverBean!=null) {                                     //正式時改mailTo 
-			mailService.sendMail("chris.chiu@vascreative.com", mailTo, "資訊服務申請單簽核通知", content1);
+		if(receiverBean!=null) {
+			String mailTitle = "資訊服務申請單簽核通知";
+			Thread thread = new MailThread(mailTo, content1, mailTitle, mailService);
+			thread.start();
 		}
 		if(stageNo==3.0) {                                    //資訊服務申請單管理人員,目前是Dori(12)
-			mailService.sendMail("chris.chiu@vascreative.com", superAdmin.getAccount(), "資訊服務申請單簽核通知", content2);
+			String mailTitle = "資訊服務申請單進度通知";
+			Thread thread = new MailThread(superAdmin.getAccount(), content2, mailTitle, mailService);
+			thread.start();
 		}else if(stageNo==5.0) {
-			mailService.sendMail("chris.chiu@vascreative.com", applicantMail, "資訊服務申請單進度通知", content2);
-			mailService.sendMail("chris.chiu@vascreative.com", applicantSupervisorMail, "資訊服務申請單進度通知", content2);
-			mailService.sendMail("chris.chiu@vascreative.com", contractorMail, "資訊服務申請單進度通知", content2);
-			mailService.sendMail("chris.chiu@vascreative.com", contractorSupervisorMail, "資訊服務申請單進度通知", content2);
+			String mailTitle = "資訊服務申請單進度通知";
+			Thread thread1 = new MailThread(applicantMail, content2, mailTitle, mailService);
+			Thread thread2 = new MailThread(applicantSupervisorMail, content2, mailTitle, mailService);
+			Thread thread3 = new MailThread(contractorMail, content2, mailTitle, mailService);
+			Thread thread4 = new MailThread(contractorSupervisorMail, content2, mailTitle, mailService);
+			thread1.start();
+			thread2.start();
+			thread3.start();
+			thread4.start();
 		}
 		
 		return infoServiceFormService.iSFList().toString();
