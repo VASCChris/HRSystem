@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import hr.model.DepInfoBean;
 import hr.model.EmpInfoBean;
+import hr.model.EmpInfoDAO;
 import hr.model.EmpInfoService;
+import hr.model.JobInfoBean;
 import net.sf.json.JSONObject;
 
 @Controller
@@ -22,7 +25,101 @@ import net.sf.json.JSONObject;
 public class EmpController implements Serializable{
 	@Autowired
     private EmpInfoService empInfoService;
+	@Autowired
+	private EmpInfoDAO empInfoDAOHibernate;
+	
+	@RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public String depList() throws Exception {
+		return empInfoService.empList().toString();
+	}
+	
+	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @ResponseBody
+	public String empSave(String account, String password,String empNo,String name,String engName,String ext,String depNo,String jobNo,String character) throws Exception {
 
+		DepInfoBean depInfoBean = new DepInfoBean();
+		JobInfoBean jobInfoBean = new JobInfoBean();
+		
+		depInfoBean.setNo(Integer.parseInt(depNo));
+		jobInfoBean.setNo(Integer.parseInt(jobNo));
+		
+		int extNumber = 0;
+		try {
+			extNumber = Integer.parseInt(ext);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		EmpInfoBean bean = new EmpInfoBean();
+		bean.setId(0);
+		bean.setAccount(account);
+		bean.setPassword(password);
+		bean.setEmpNo(empNo);
+		bean.setName(name);
+		bean.setEngName(engName);
+		bean.setExt(extNumber);
+		bean.setDepInfoBean(depInfoBean);
+		bean.setJobInfoBean(jobInfoBean);
+		bean.setCharacter(character);
+		Boolean result = empInfoService.insert(bean);
+		if(result){
+			return empInfoService.empList().toString();
+		}
+		return "";
+	}
+	
+	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @ResponseBody
+	public String empUpdate(String id, String account,String empNo,String name,String engName,String ext,String depNo,String jobNo,String character) throws Exception {
+		
+		EmpInfoBean empInfoBean = new EmpInfoBean();
+		DepInfoBean depInfoBean = new DepInfoBean();
+		JobInfoBean jobInfoBean = new JobInfoBean();
+		
+		depInfoBean.setNo(Integer.parseInt(depNo));
+		jobInfoBean.setNo(Integer.parseInt(jobNo));
+		
+		String password = empInfoDAOHibernate.select(Integer.parseInt(id)).getPassword();
+		
+		int extNumber = 0;
+		try {
+			extNumber = Integer.parseInt(ext);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		EmpInfoBean bean = new EmpInfoBean();
+		bean.setId(Integer.parseInt(id));
+		bean.setAccount(account);
+		bean.setPassword(password);
+		bean.setEmpNo(empNo);
+		bean.setName(name);
+		bean.setEngName(engName);
+		bean.setExt(extNumber);
+		bean.setDepInfoBean(depInfoBean);
+		bean.setJobInfoBean(jobInfoBean);
+		bean.setCharacter(character);
+		Boolean result = empInfoService.update(bean);
+		if(result)
+		  return empInfoService.empList().toString();
+		else
+		  return null;
+	}
+	
+	
+	@RequestMapping(value = "/del", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @ResponseBody
+	public String empDel(String id) throws Exception {
+		Integer num = Integer.parseInt(id);
+		
+		Boolean result = empInfoService.delete(num);
+		if(result)
+		  return empInfoService.empList().toString();
+		else
+		  return null;
+	}
+	
 	@RequestMapping(value = "/empsfordep", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
     public String empsForDep(String depNum) throws Exception {
@@ -68,7 +165,7 @@ public class EmpController implements Serializable{
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
     @ResponseBody
-	public String logout(HttpServletRequest request) throws Exception {
+	public String logOut(HttpServletRequest request) throws Exception {
 		HttpSession session = request.getSession();
 		JSONObject jsonObject = new JSONObject();
 		

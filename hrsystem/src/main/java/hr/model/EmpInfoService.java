@@ -8,10 +8,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import hr.model.dao.EmpInfoDAOHibernate;
 import net.sf.json.JSONArray;
 
 
@@ -22,9 +20,15 @@ public class EmpInfoService implements Serializable{
 	@Autowired
 	private DepInfoDAO depInfoDAOHibernate;
 
-//	public EmpInfoService(EmpInfoDAO empInfoDAO) {
-//		this.empInfoDAO = empInfoDAO;
-//	}
+
+	public JSONArray empList(){
+		JSONArray empList = new JSONArray();
+		List<EmpInfoBean> eList = empInfoDAOHibernate.select();
+		for (EmpInfoBean empInfoBean : eList) {
+			empList.add(empInfoBean.toJSONObject());
+        }
+		return empList;
+	}
 	
 	public JSONArray empListByDep(int depNo){
 		JSONArray empListByDep = new JSONArray();
@@ -72,12 +76,15 @@ public class EmpInfoService implements Serializable{
 		return result;
 	}
 	
-	public EmpInfoBean update(EmpInfoBean bean){
+	public Boolean update(EmpInfoBean bean){
 		EmpInfoBean result = null;
 		if(bean!=null && bean.getId()!=0){
 			result = empInfoDAOHibernate.update(bean);
+			if(result!=null) {
+				return true;
+			}
 		}
-		return result;
+		return false;
 	}
 	
 	public Boolean delete(Integer id){

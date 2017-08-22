@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <html>
-<head><script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="https://codepen.io/jackrugile/pen/EyABe" />
-
+<head>
+<script type="text/javascript" src="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/js/jquery-1.11.2.min.js"></script>
 <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'><script src='https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js'></script>
 <style class="cp-pen-styles">body {
 	background: #fafafa url(https://jackrugile.com/images/misc/noise-diagonal.png);
@@ -114,64 +114,174 @@ tbody:hover td {
 tbody:hover tr:hover td {
 	color: #444;
 	text-shadow: 0 1px 0 #fff;
-}</style></head>
+}
+</style>
+
+<script type="text/javascript">
+var deps = '';
+var jobs = '';
+$(document).ready(function(){
+	list();
+});
+//==================================================emp列表==================================================
+function list() {
+	$.ajax({
+        type: 'get',
+        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/emp/list',
+     
+        dataType: 'json',
+        async: false,
+        cache: false,
+        success: function (data) {
+        	depList();
+        	jobList();
+        	$('#empList').html('');
+        	for (var i = 0; i < data.length; i++) {
+        		addEmp(data[i]);
+        		$('#depNo'+data[i].id).append(deps);
+        		$('#jobNo'+data[i].id).append(jobs);
+        	}
+        }
+    });
+}
+//==================================================抓emp列表==================================================
+function addEmp(data){
+	var id = data.id;
+	var bodyHTML = '<tr>';
+	bodyHTML += '<td><input id="empNo' + id +'" type="text" value="' + data.empNo +'"></td>';
+	bodyHTML += '<td><input id="account' + id +'" type="text" value="' + data.account +'"></td>';
+	bodyHTML += '<td><input id="name' + id +'" type="text" value="' + data.name +'"></td>';
+	bodyHTML += '<td><input id="engName' + id +'" type="text" value="' + data.engName +'"></td>';
+	bodyHTML += '<td><input id="ext' + id +'" type="text" value="' + data.ext +'"></td>';
+	bodyHTML += '<td><select id="depNo' + id +'"><option value="'+data.depNo+'">'+ data.depName +'</option></select></td>';
+	bodyHTML += '<td><select id="jobNo' + id +'"><option value="'+data.jobNo+'">'+ data.jobName +'</option></select></td>';
+	bodyHTML += '<td><select id="character' + id +'"><option value="'+data.character+'">'+ data.character +'</option><option value="superadmin">superadmin</option><option value="admin">admin</option><option value="common">common</option></select></td>';
+	bodyHTML += '<td><button type="button" name="send" onclick="update('+ id +')">修改</button></td>';
+	bodyHTML += '<td><button type="button" name="send" onclick="empDel('+ id +')">刪除</button></td></tr>';
+	$('#empList').append(bodyHTML);
+}	
+	
+//==================================================修改==================================================
+	function update(id){
+		$.ajax({
+	        type: 'post',
+	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/emp/update',
+	        data: {
+	        	id: id,
+	        	empNo: $('#empNo'+id).val(),
+	        	account: $('#account'+id).val(),
+	        	name: $('#name'+id).val(),
+	        	engName: $('#engName'+id).val(),
+	        	ext: $('#ext'+id).val(),
+	        	depNo: $('#depNo'+id).val(),
+	        	jobNo: $('#jobNo'+id).val(),
+	        	character: $('#character'+id).val(),
+            },
+	        dataType: 'json',
+	        async: false,
+	        cache: false,
+	        success: function (data) {
+	        	list();
+	        },
+            error: function (data) {
+	        	list();
+            }
+	    });
+}
+		//==================================================刪除==================================================	
+	function empDel(id){
+		$.ajax({
+	        type: 'post',
+	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/emp/del',
+	        data: {
+	        	id: id,
+            },
+	        dataType: 'json',
+	        async: false,
+	        cache: false,
+	        success: function (data) {
+	        	console.log("success");
+	        	list();
+	        },
+            error: function (data) {
+            	console.log("error");
+	        	list();
+            }
+	    });
+}
+	//==================================================dep列表==================================================
+	function depList() {
+		$.ajax({
+	        type: 'get',
+	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/dep/list',
+	     
+	        dataType: 'json',
+	        async: false,
+	        cache: false,
+	        success: function (data) {
+	        	var bodyHTML='';
+	        	$('#depList').html('');
+	        	for (var i = 0; i < data.length; i++) {
+	        		var dep = addDep(data[i]);
+	        		bodyHTML += dep;
+	        	}
+	        	deps = bodyHTML;
+	        }
+	    });
+	}
+	//==================================================抓dep列表==================================================
+	function addDep(data){
+		var bodyHTML = '<option value="'+ data.no +'">'+ data.name +'</option>';
+		return bodyHTML;
+	}
+	//==================================================job列表==================================================
+	function jobList() {
+		$.ajax({
+	        type: 'get',
+	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/job/list',
+	     
+	        dataType: 'json',
+	        async: false,
+	        cache: false,
+	        success: function (data) {
+	        	var bodyHTML='';
+	        	$('#jobList').html('');
+	        	for (var i = 0; i < data.length; i++) {
+	        		var job = addJob(data[i]);
+	        		bodyHTML += job;
+	        	}
+	        	jobs = bodyHTML;
+	        }
+	    });
+	}
+	//==================================================抓job列表==================================================
+	function addJob(data){
+		var bodyHTML = '<option value="'+ data.no +'">'+ data.name +'</option>';
+		return bodyHTML;
+	}
+</script>
+</head>
+	
 <body>
-<table style="width: 1500px;">
+<table>
   <thead>
     <tr>
-          <th>員工編號</th>
-          <th>帳號</th>
-          <th>姓名</th>
-          <th>英文名</th>
-          <th>分機</th>
-          <th>部門</th>
-          <th>職務</th>
-          <th>權限</th>
-          <th></th>
-          <th></th>
-        </tr>
+      <th>員工編號</th>
+      <th>帳號</th>
+      <th>姓名</th>
+      <th>英文名</th>
+      <th>分機</th>
+      <th>部門</th>
+      <th>職務</th>
+      <th>權限</th>
+      <th></th>
+      <th></th>
+    </tr>
   </thead>
-  <tbody>
-    <c:forEach var='empList' items="${empList}">
-			<form action='<c:url value="/management/EmpControl.controller" />' method="post">
-			   <tr>
-				<td><input type="text" name="empNo" value="${empList.empNo}"></td>
-				<td>${empList.account}
-				   <input type="hidden" name="id" value="${empList.id}">
-				   <input type="hidden" name="account" value="${empList.account}">
-				   <input type="hidden" name="password" value="${empList.password}">				
-				</td>
-				<td><input type="text" name="name" value="${empList.name}"></td>
-				<td><input type="text" name="engName" value="${empList.engName}"></td>
-				<td><input type="text" name="ext" value="${empList.ext}"></td>
-				<td><select name="dep">
-                   <option value="${empList.depInfoBean.no}">${empList.depInfoBean.name}</option>
-                   <c:forEach var="depList" items="${depList}">
-                     <option value="${depList.no}">${depList.name}</option>
-                   </c:forEach>
-                </select></td>
-				<td><select name="job">
-                   <option value="${empList.jobInfoBean.no}">${empList.jobInfoBean.name}</option>
-                   <c:forEach var="jobList" items="${jobList}">
-                     <option value="${jobList.no}">${jobList.name}</option>
-                   </c:forEach>
-                </select></td>
-				<td><select name="character">
-        			 <option value="${empList.character}">${empList.character}</option>
-       				 <option value="superadmin">superadmin</option>
-       				 <option value="admin">admin</option>
-        			 <option value="common">common</option>
-                </select></td>
-				<td><button type="submit" name="send" value="update">修改</button></td>
-				<td><Button type="submit" name="send" value="delete">刪除</Button></td>
-			   </tr>
-			</form>
-			</c:forEach>
+  <tbody id="empList">
+
   </tbody>
 </table>
 <a href="../index.jsp">上一頁</a>
-<script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script><script src='//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-<script>/* Hover over table rows to see fade/blur effect */
-//# sourceURL=pen.js
-</script>
+
 </body></html>

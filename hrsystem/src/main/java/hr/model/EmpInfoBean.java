@@ -173,8 +173,10 @@ public class EmpInfoBean implements Serializable{
 		empInfoBean.put("name", name);
 		empInfoBean.put("engName", engName);
 		empInfoBean.put("ext", ext);
-		empInfoBean.put("depInfoBean", depInfoBean.getNo());
-		empInfoBean.put("jobInfoBean", jobInfoBean.getNo());
+		empInfoBean.put("depNo", depInfoBean.getNo());
+		empInfoBean.put("depName", depInfoBean.getName());
+		empInfoBean.put("jobNo", jobInfoBean.getNo());
+		empInfoBean.put("jobName", jobInfoBean.getName());
 		empInfoBean.put("character", character);
 		
 		

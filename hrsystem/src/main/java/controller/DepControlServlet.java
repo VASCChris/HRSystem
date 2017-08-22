@@ -106,7 +106,7 @@ public class DepControlServlet extends HttpServlet {
 		
 		if("update".equals(send)){
 			Boolean update = depInfoService.update(bean);
-			if(update!=null){
+			if(update!=false){
 				List<DepInfoBean> list = depInfoService.depList();
 				if(list!=null){
 					HttpSession session = request.getSession();

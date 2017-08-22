@@ -162,8 +162,8 @@ public class EmpControlServlet extends HttpServlet {
 		bean.setCharacter(character);
 		
 		if("update".equals(send)){
-			EmpInfoBean update = empInfoService.update(bean);
-			if(update!=null){
+			Boolean update = empInfoService.update(bean);
+			if(update!=false){
 				List<DepInfoBean> depList = depInfoService.depList();
 				List<JobInfoBean> jobList = jobInfoService.jobList();
 				List<EmpInfoBean> empList = empInfoService.empInfo(null);

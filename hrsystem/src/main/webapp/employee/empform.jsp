@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page import="org.apache.commons.lang.StringEscapeUtils" %>
 <html>
 <head>
 <script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="https://codepen.io/jaycbrf/pen/iBszr" />
@@ -10,9 +11,9 @@
 
 <link rel='stylesheet prefetch' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'><link rel='stylesheet prefetch' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css'><link rel='stylesheet prefetch' href='//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css'>
 <style class="cp-pen-styles">#success_message{ display: none;}</style>
-<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"> -->
-<link rel="stylesheet" href="../css/font-awesome.min.css">
-<script src="https://use.fontawesome.com/72bc13eff4.js"></script>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/font-awesome.min.css">
+<script src="https://use.fontawesome.com/4e67c494c5.js"></script>
 </head>
 <body>
 <div class="container">
@@ -54,7 +55,7 @@
   <label class="col-md-4 control-label">員工編號</label>  
     <div class="col-md-4 inputGroupContainer">
     <div class="input-group">
-        <span class="input-group-addon"><i class="fa fa-address-card" aria-hidden="true"></i></span>
+        <span class="input-group-addon"><i class="fa fa-id-card-o" aria-hidden="true"></i></span>
   <input name="empNo" placeholder="A+3數字" class="form-control"  type="text"  value="${param.empNo}">
     </div>
     <small data-bv-validator="notEmpty" data-bv-validator-for="empNo" class="help-block" style="color: red;">${errorMsg.empNo}</small>
@@ -144,7 +145,6 @@
         <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
     <select name="character" class="form-control selectpicker" >
          <option value="0">選擇職務</option>
-         <option value="superadmin">superadmin</option>
          <option value="admin">admin</option>
          <option value="common">common</option>
     </select>

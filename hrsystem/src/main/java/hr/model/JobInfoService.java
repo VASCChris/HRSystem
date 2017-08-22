@@ -10,38 +10,52 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import net.sf.json.JSONArray;
+
 @Service("jobInfoService")
 public class JobInfoService implements Serializable{
 	@Autowired
-	private JobInfoDAO jobInfoDAO;
+	private JobInfoDAO jobInfoDAOHibernate;
 //	public JobInfoService(JobInfoDAO jobInfoDAO) {
 //		this.jobInfoDAO = jobInfoDAO;
 //	}
 	
-	public List<JobInfoBean> jobList(){
-		return jobInfoDAO.select();
+//	public List<JobInfoBean> jobList(){
+//		return jobInfoDAOHibernate.select();
+//	}
+	public JSONArray jobList(){
+		JSONArray jobList = new JSONArray();
+		List<JobInfoBean> jList = jobInfoDAOHibernate.select();
+		for (JobInfoBean jobInfoBean : jList) {
+			jobList.add(jobInfoBean.toJSONObject());
+        }
+		return jobList;
 	}
+	
 	
 	public Boolean insert(JobInfoBean bean){
 		Boolean result = false;
 		if(bean!=null){
-			result = jobInfoDAO.insert(bean);
+			result = jobInfoDAOHibernate.insert(bean);
 		}
 		return result;
 	}
 	
-	public JobInfoBean update(JobInfoBean bean){
+	public Boolean update(JobInfoBean bean){
 		JobInfoBean result = null;
 		if(bean!=null && bean.getNo()!=0){
-			result = jobInfoDAO.update(bean);
+			result = jobInfoDAOHibernate.update(bean);
+			if(result!=null) {
+				return true;
+			}
 		}
-		return result;
+		return false;
 	}
 	
 	public Boolean delete(Integer id){
 		Boolean result = false;
 		if(id!=0){
-			result = jobInfoDAO.delete(id);
+			result = jobInfoDAOHibernate.delete(id);
 		}
 		return result;
 	}

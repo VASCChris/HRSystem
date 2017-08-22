@@ -5,10 +5,8 @@
 <html>
 <head>
 <script  src="http://code.jquery.com/jquery-1.12.4.min.js"  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-
-<link rel='stylesheet prefetch' href='//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css'>
-<script src="https://use.fontawesome.com/1c7ea35d90.js"></script>
-<link rel="stylesheet" href="<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/resource/css/font-awesome.min.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
 <script type="text/javascript">
 $(document).ready(function(){
 	setApplicantDepNo();
@@ -150,7 +148,7 @@ function securityLvAdd(data){
 	$('#security').append(bodyHTML);
 }
 //==================================================送出==================================================
-function insert(){
+function send(){
 	$.ajax({
         type: 'post',
         url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/infoservice/save',
@@ -176,83 +174,14 @@ function insert(){
 </script>
 </head>
 <body>
-<div class="container">
-
-<form class="well form-horizontal" method="post" id="contact_form">
-<fieldset>
-
-<!-- Form Name -->
-<legend>資訊服務申請單</legend>
-
+申請單類別:<select id="type"><option value="一般">一般</option><option value="急件">急件</option></select><br><br>
 <input id="applicantDep" type="hidden" value="" />
+申請人:<select id="applicant"><option value="0">請先選擇部門</option></select><br><br>
+承辦單位:<select id="contractorDep" onchange="cEmpList()"><option value="0">選擇部門</option></select><br><br>
+服務需求:<br>
+<textarea id="demand" placeholder="問題說明" value=""></textarea><br><br>
 
-<!-- Select Basic -->
-
-<div class="form-group"> 
-  <label class="col-md-4 control-label">申請單類別</label>
-    <div class="col-md-4 selectContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-    <select id="type" class="form-control selectpicker" >
-         <option value="一般">一般</option>
-         <option value="急件">急件</option>
-    </select>
-  </div>
- </div>
-</div>
-
-<!-- Select Basic -->
-   
-<div class="form-group"> 
-  <label class="col-md-4 control-label">申請人</label>
-    <div class="col-md-4 selectContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-    <select id="applicant" class="form-control selectpicker" >
-    </select>
-  </div>
- </div>
-</div>
-
-<!-- Select Basic -->
-   
-<div class="form-group"> 
-  <label class="col-md-4 control-label">承辦單位</label>
-    <div class="col-md-4 selectContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="glyphicon glyphicon-list"></i></span>
-    <select id="contractorDep" class="form-control selectpicker" >
-    </select>
-  </div>
-</div>
-</div>
-
-<!-- Text input-->
-       <div class="form-group">
-  <label class="col-md-4 control-label">服務需求</label>  
-    <div class="col-md-4 inputGroupContainer">
-    <div class="input-group">
-        <span class="input-group-addon"><i class="fa fa-question-circle-o" aria-hidden="true"></i></span>
-  <textarea id="demand" placeholder="問題說明" class="form-control" ></textarea>
-    </div>
-  </div>
-</div>
-
-<!-- Button -->
-<div class="form-group" style="margin-left: 82px;">
-  <label class="col-md-4 control-label"></label>
-  <div class="col-md-4" style="width: 150px;">
-    <button type="button" class="btn btn-warning" onclick="insert()">確認</button>
-  </div>
-  <div class="col-md-4">
-    <button type="reset" class="btn btn-warning" name="send" value="cancel">清除</button>
-  </div>
-</div>
-
-</fieldset>
-</form>
-</div>
-    </div><!-- /.container -->
+<Button type="button" value="send" onclick="send()">送出</Button><br>
 <a href="../index.jsp">上一頁</a>
-
-</body></html>
+</body>
+</html>

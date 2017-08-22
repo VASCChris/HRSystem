@@ -107,8 +107,8 @@ public class JobControlServlet extends HttpServlet {
 		}
 		
 		if("update".equals(send)){
-			JobInfoBean update = jobInfoService.update(bean);
-			if(update!=null){
+			Boolean update = jobInfoService.update(bean);
+			if(update!=false){
 				List<JobInfoBean> list = jobInfoService.jobList();
 				if(list!=null){
 					HttpSession session = request.getSession();
