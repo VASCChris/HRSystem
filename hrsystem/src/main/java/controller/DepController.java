@@ -2,6 +2,7 @@ package controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +24,7 @@ public class DepController {
 		return depInfoService.depList().toString();
 	}
 	
-	@RequestMapping(value = "/save", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/management", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     @ResponseBody
 	public String depSave(String name, String supervisor) throws Exception {
 
@@ -38,9 +39,12 @@ public class DepController {
 		return "";
 	}
 	
-	@RequestMapping(value = "/update", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/management/{no}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
     @ResponseBody
-	public String depUpdate(String no, String name, String supervisor) throws Exception {
+	public String depUpdate(@PathVariable("no")String no, String name, String supervisor) throws Exception {
+		System.out.println("no="+no);
+		System.out.println("name="+name);
+		System.out.println("supervisor="+supervisor);
 		DepInfoBean bean = new DepInfoBean();
 		Integer num = Integer.parseInt(no);
 		bean.setNo(num);
@@ -54,9 +58,9 @@ public class DepController {
 	}
 	
 	
-	@RequestMapping(value = "/depDel", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/management/{no}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
     @ResponseBody
-	public String depDel(String no) throws Exception {
+	public String depDel(@PathVariable("no") String no) throws Exception {
 		
 		Integer num = Integer.parseInt(no);
 		

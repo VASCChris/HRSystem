@@ -163,7 +163,7 @@ function addDep(data){
 	function update(no){
 		$.ajax({
 	        type: 'post',
-	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/dep/update',
+	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/dep/management/'+no,
 	        data: {
             	no: no,
             	name: $('#name'+no).val(),
@@ -184,7 +184,7 @@ function addDep(data){
 		function save(){
 		$.ajax({
 	        type: 'post',
-	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/dep/save',
+	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/dep/management',
 	        data: {
             	name: $('#names').val(),
             	supervisor: $('#supervisors').val(),
@@ -205,8 +205,8 @@ function addDep(data){
 		//==================================================刪除==================================================	
 	function depDel(no){
 		$.ajax({
-	        type: 'post',
-	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/dep/depDel',
+	        type: 'DELETE',
+	        url: '<%=StringEscapeUtils.escapeHtml(request.getContextPath())%>/dep/management/'+no,
 	        data: {
             	no: no,
             	
